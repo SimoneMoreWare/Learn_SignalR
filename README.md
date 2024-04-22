@@ -5,9 +5,15 @@ SignalR Tutorial
 
 # Topic
 * [Overview of ASP.NET Core SignalR](#Overview-of-ASP.NET-Core-SignalR)
+    * [What is SignalR?](#What-is-SignalR?)
+    * [Transports](#Transports)
+    * [Hubs](#Hubs)
+    * [Browsers that don't support ECMAScript 6 (ES6)](#Browsers-that-don't-support-ECMAScript-6-(ES6))
 * [Repository](#Repository)
 
 # Overview of ASP.NET Core SignalR
+
+## What is SignalR?
 
 ASP.NET Core SignalR is an open-source library that simplifies adding real-time web functionality to apps. Real-time web functionality enables server-side code to push content to clients instantly.
 
