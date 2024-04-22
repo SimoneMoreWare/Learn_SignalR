@@ -11,6 +11,8 @@ SignalR Tutorial
     * [Transports](#Transports)
     * [Hubs](#Hubs)
     * [Browsers that don't support ECMAScript 6 (ES6)](#Browsers-that-don't-support-ECMAScript-6-(ES6))
+    * [RoadMap](#RoadMap)
+* [Best practices](#Best-practices)
 * [Repository](#Repository)
 * [Site](#Site)
 
@@ -28,6 +30,10 @@ Good candidates for SignalR:
 * Apps that require notifications. Social networks, email, chat, games, travel alerts, and many other apps use notifications.
 
 SignalR provides an API for creating server-to-client remote procedure calls ([RPC](https://wikipedia.org/wiki/Remote_procedure_call)). The RPCs invoke functions on clients from server-side .NET Core code. There are several [supported platforms](https://learn.microsoft.com/en-us/aspnet/core/signalr/supported-platforms?view=aspnetcore-8.0), each with their respective client SDK. Because of this, the programming language being invoked by the RPC call varies.
+
+The impact of SignalR is not restricted to enhancing user experience. Additionally, it decreases server load time by staying away from unnecessary polling. This reduction in unnecessary network traffic and server load can result in more scalable applications that can support much more simultaneous connections without sacrificing performance. Reduced Network Traffic Compared to Polling or Constant Refreshes: Traditional content update methods including polling or periodic page refreshes consume network traffic and server load. SignalR performs all communications between server and client efficiently, sending only data when updates can be found. This dramatically decreases bandwidth use and server resources, leading to a far more scalable and performant application.
+
+Reduced Network Traffic Compared to Polling or Constant Refreshes: Traditional content update methods including polling or periodic page refreshes consume network traffic and server load. SignalR performs all communications between server and client efficiently, sending only data when updates can be found. This dramatically decreases bandwidth use and server resources, leading to a far more scalable and performant application.
 
 Here are some features of SignalR for ASP.NET Core:
 
@@ -105,8 +111,45 @@ SignalR targets ES6. For browsers that don't support ES6, transpile the library 
 * [JavaScript client](https://learn.microsoft.com/en-us/aspnet/core/signalr/javascript-client?view=aspnetcore-8.0)
 * [Browsers that don't support ECMAScript 6 (ES6)](https://learn.microsoft.com/en-us/aspnet/core/signalr/supported-platforms?view=aspnetcore-8.0#es6)
 
+## RoadMap
+https://learn.microsoft.com/it-it/aspnet/signalr/overview/getting-started/real-time-web-applications-with-signalr
+
+# Best practices
+
+* Minimize Message Size:
+    * Keep the data payloads as small as possible. This might involve sending only the necessary data or changes rather than full objects. For example, if you’re updating a user’s status, send only the status change rather than the entire user object: await Clients.All.SendAsync("UpdateStatus", userId, newStatus);
+* Reduce Frequency of Messages
+    *   Implement mechanisms to throttle the number of messages sent over a period, especially in scenarios with rapid state changes. Consider a scenario where you’re tracking mouse movements in a collaborative drawing app. Instead of sending updates for every pixel change, you could send updates at regular intervals
+* Reconnecting Clients: Implement client-side logic to automatically reconnect in case of disconnection.
+``` 
+connection.onclose(async () => {
+    await start();
+});
+
+async function start() {
+    try {
+        await connection.start();
+        console.log("SignalR Connected.");
+    } catch (err) {
+        console.log(err);
+        setTimeout(start, 5000);
+    }
+}
+
+start();
+```
+*  Authentication:
+    *  SignalR can use ASP.NET Core’s authentication system. Ensure that your hub methods are accessible only to authenticated users by applying the [Authorize] attribute.
+*  Authorization:
+    *  For more granular control, you can implement custom authorization policies based on user roles or claims.
+*  Logging:
+    *  Implement logging to monitor connection density, message throughput, and error rates. ASP.NET Core’s built-in logging providers can be configured in Startup.cs.
+*  Scale-Out:
+    *  For applications needing to support thousands of concurrent connections, consider using Azure SignalR Service or similar scale-out mechanisms. To use Azure SignalR Service, add the service connection string to your appsettings.json and modify the Startup.cs to include: services.AddSignalR().AddAzureSignalR(connectionString);
+
 # Repository
 * https://github.com/dotnet/AspNetCore/tree/main/src/SignalR
 
 # Site
 * https://dotnet.microsoft.com/en-us/apps/aspnet/signalr
+* https://learn.microsoft.com/en-us/azure/azure-signalr/
