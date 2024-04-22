@@ -15,6 +15,7 @@ SignalR Tutorial
 * [Best practices](#Best-practices)
 * [Repository](#Repository)
 * [Site](#Site)
+* [Exercises](#Exercises)
 
 # Overview of ASP.NET Core SignalR
 
@@ -153,3 +154,7 @@ start();
 # Site
 * https://dotnet.microsoft.com/en-us/apps/aspnet/signalr
 * https://learn.microsoft.com/en-us/azure/azure-signalr/
+
+# Exercises
+* https://www.sitepoint.com/build-real-time-signalr-dashboard-angularjs/
+* https://www.telerik.com/blogs/real-time-winui-dashboard-with-signalr-backend
