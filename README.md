@@ -6,11 +6,13 @@ SignalR Tutorial
 # Topic
 * [Overview of ASP.NET Core SignalR](#Overview-of-ASP.NET-Core-SignalR)
     * [What is SignalR?](#What-is-SignalR?)
+    * [Use Cases Of SignalR](#Use-Cases-Of-SignalR)
     * [Web Monitoring Application](#WebMonitoringApplication)
     * [Transports](#Transports)
     * [Hubs](#Hubs)
     * [Browsers that don't support ECMAScript 6 (ES6)](#Browsers-that-don't-support-ECMAScript-6-(ES6))
 * [Repository](#Repository)
+* [Site](#Site)
 
 # Overview of ASP.NET Core SignalR
 
@@ -36,6 +38,32 @@ Here are some features of SignalR for ASP.NET Core:
 * [SignalR Hub Protocol](https://github.com/dotnet/aspnetcore/blob/main/src/SignalR/docs/specs/HubProtocol.md)
 
 The source is hosted in a [SignalR repository on GitHub](https://github.com/dotnet/AspNetCore/tree/main/src/SignalR)
+
+## Use Cases Of SignalR
+
+### Chat Applications
+
+SignalR is a leader in chat application development with instant messaging capabilities. [4]
+It allows rich messaging applications where users can create rooms or groups and get messages in real time without having to refresh their internet browser.
+This is crucial for applications that need group chats, private messaging, and handling a high number of concurrent users.
+
+### Real-time Dashboards:
+
+SignalR’s real time data push capabilities are especially helpful for dashboards that show live data updates, like stock trading platforms, weather apps or sports scores.
+It allows the server to push updates to the dashboard when new data becomes available, enabling users to constantly have the up to date info without refreshing manually.
+This is crucial for decision making in dynamic environments where data changes rapidly.
+
+### Online Gaming:
+
+In online gaming, SignalR can be used to map game state between players to ensure that all players see the same game world.
+It enables the creation of real time, multiplayer games through rapid and secure server-client interaction.
+This synchronization is crucial for competitive and cooperative gaming where latency or game state discrepancies can have a large effect on gameplay.
+
+### Collaborative Editing:
+
+SignalR supports the development of applications where several users can edit documents or projects at the same time.
+SignalR facilitates collaborative work by making changes made by one user visible to all other users working on the document at the same time.
+This is especially crucial in academic, creative, and professional settings where teamwork and collaboration is crucial to productivity.
 
 ## Web Monitoring Application
 
@@ -79,3 +107,6 @@ SignalR targets ES6. For browsers that don't support ES6, transpile the library 
 
 # Repository
 * https://github.com/dotnet/AspNetCore/tree/main/src/SignalR
+
+# Site
+* https://dotnet.microsoft.com/en-us/apps/aspnet/signalr
