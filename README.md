@@ -3,6 +3,9 @@ SignalR Tutorial
 
 # Notes
 
+# Video Courses
+* https://www.youtube.com/watch?v=pl0OobPmWTk
+
 # Topic
 * [Overview of ASP.NET Core SignalR](#Overview-of-ASP.NET-Core-SignalR)
     * [What is SignalR?](#What-is-SignalR?)
@@ -16,6 +19,7 @@ SignalR Tutorial
 * [Repository](#Repository)
 * [Site](#Site)
 * [Exercises](#Exercises)
+* [Payment Courses](#Payment-Courses)
 
 # Overview of ASP.NET Core SignalR
 
@@ -158,3 +162,8 @@ start();
 # Exercises
 * https://www.sitepoint.com/build-real-time-signalr-dashboard-angularjs/
 * https://www.telerik.com/blogs/real-time-winui-dashboard-with-signalr-backend
+* https://medium.com/@ajith.ramawickrama/develop-a-real-time-dashboard-using-azure-cosmosdb-azure-functions-azure-signalr-services-and-ac670de580f4
+
+# Payment Courses
+* https://www.udemy.com/course/signalr-mastery/?couponCode=LETSLEARNNOW
+* https://www.udemy.com/course/signalr-the-complete-guide/?couponCode=LETSLEARNNOW
