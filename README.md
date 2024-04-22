@@ -4,8 +4,8 @@ SignalR Tutorial
 # Notes
 
 # Topic
-* (Overview of ASP.NET Core SignalR)[#Overview-of-ASP.NET-Core-SignalR]
-* (Repository)[#Repository]
+* [Overview of ASP.NET Core SignalR](#Overview-of-ASP.NET-Core-SignalR)
+* [Repository](#Repository)
 
 # Overview of ASP.NET Core SignalR
 
