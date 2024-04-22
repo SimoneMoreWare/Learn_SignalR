@@ -6,6 +6,7 @@ SignalR Tutorial
 # Topic
 * [Overview of ASP.NET Core SignalR](#Overview-of-ASP.NET-Core-SignalR)
     * [What is SignalR?](#What-is-SignalR?)
+    * [Web Monitoring Application](#WebMonitoringApplication)
     * [Transports](#Transports)
     * [Hubs](#Hubs)
     * [Browsers that don't support ECMAScript 6 (ES6)](#Browsers-that-don't-support-ECMAScript-6-(ES6))
@@ -35,6 +36,17 @@ Here are some features of SignalR for ASP.NET Core:
 * [SignalR Hub Protocol](https://github.com/dotnet/aspnetcore/blob/main/src/SignalR/docs/specs/HubProtocol.md)
 
 The source is hosted in a [SignalR repository on GitHub](https://github.com/dotnet/AspNetCore/tree/main/src/SignalR)
+
+## Web Monitoring Application
+
+Suppose we want to create a web monitoring application that provides the user with a dashboard capable of displaying a series of information that updates over time.
+
+One approach is to cyclically call an API at certain intervals (polling) to update the data on the dashboard. However, there is a problem: if there is no updated data, we are unnecessarily increasing network traffic with our requests. An alternative is the technique of long-polling: if the server has no data available, instead of sending an empty response, it can keep the request alive until something happens or a predetermined timeout is reached. If there is new data, the complete response reaches the client. A completely different approach is to reverse the roles: the backend contacts the clients when new data is available (push).
+
+Remember that HTML5 has standardized WebSocket, which is a configurable permanent bidirectional connection via a JavaScript interface in compatible browsers. Unfortunately, there must be full WebSocket support, both client-side (browsers) and server-side, to make it available. Therefore, we need to provide alternative mechanisms (fallbacks) to ensure that our application always works.
+
+Microsoft released an open-source library called SignalR for ASP.NET in 2013, which was rewritten for ASP.NET Core in 2018. SignalR abstracts all communication mechanism details by choosing the best one available. The result is being able to write code as if we were always in push mode. With SignalR, the server can call a JavaScript method on all its connected clients or on a specific one.
+
 
 ## Transports
 SignalR supports the following techniques for handling real-time communication (in order of graceful fallback):
