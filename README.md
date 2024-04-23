@@ -5,6 +5,8 @@ SignalR Tutorial
 
 # Video Courses
 * https://www.youtube.com/watch?v=pl0OobPmWTk
+* https://www.youtube.com/watch?v=8c8dknlwrJ4&list=PL_c9BZzLwBRKJugyyAdhBoAPRs1DdaS7n&index=20
+* https://www.youtube.com/watch?v=RaXx_f3bIRU&t=3114s + https://www.youtube.com/watch?v=-JzWg-Kwu7g
 
 # Topic
 * [Overview of ASP.NET Core SignalR](#Overview-of-ASP.NET-Core-SignalR)
@@ -427,6 +429,8 @@ With this statement, you are invoking the method "NewWindowLoaded" on the server
 * https://www.telerik.com/blogs/real-time-winui-dashboard-with-signalr-backend
 * https://medium.com/@ajith.ramawickrama/develop-a-real-time-dashboard-using-azure-cosmosdb-azure-functions-azure-signalr-services-and-ac670de580f4
 * https://blog.saverioriotto.it/blog/296/tutorial/creare-una-web-app-in-tempo-reale-con-blazor-e-signalr
+* https://www.youtube.com/watch?v=pvi_ZS_PrSc&pp=ugMICgJpdBABGAHKBQdzaWduYWxy
+* https://www.youtube.com/watch?v=O7oaxFgNuYo
 
 # Payment Courses
 * https://www.udemy.com/course/signalr-mastery/?couponCode=LETSLEARNNOW
