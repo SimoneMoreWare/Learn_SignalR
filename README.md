@@ -21,6 +21,7 @@ SignalR Tutorial
     * [Step 1: Create SignalR Hub](#step-1-create-signalr-hub)
     * [Step 2 and 6: Add methods to hub and SignalR Hub invokes method in client JS to notify clients](#step-2-and-6-add-methods-to-hub-and-signalr-hub-invokes-method-in-client-js-to-notify-clients)
     * [Other steps](#Other-steps)
+* [Invoke vs Send](#InvokevsSend)      
 * [Repository](#Repository)
 * [Site](#Site)
 * [Exercises](#Exercises)
@@ -279,7 +280,7 @@ Now, you should add a client-side library. At the moment, you should choose unpk
 
 ```
 //create connection
-var connectionUserCount = new signalR.HubConnectionBuilder().withUrl("/hubs/userCount").build();
+var connectionUserCount = new signalR.HubConnectionBuilder().withUrl("/hubs/userCount", signalR.HttpTransportType.WebSockets).build();
 
 //connect to methods that hub invokes aka receive notfications from hub
 connectionUserCount.on("updateTotalViews", (value) => {
@@ -315,13 +316,19 @@ Here's what happens step by step within this file:
 
 1. Creation of SignalR hub connection:
 An object connectionUserCount is created using HubConnectionBuilder provided by SignalR. This object is configured with the URL of the SignalR hub ("/hubs/userCount").
-2. Handling notifications from the server:
+    * new signalR.HubConnectionBuilder(): This creates a new instance of HubConnectionBuilder, which is used to configure and build a SignalR hub connection.
+    * .withUrl("/hubs/userCount", signalR.HttpTransportType.WebSockets): This method configures the URL for the hub connection and specifies the transport type to be used.
+    * "/hubs/userCount": This specifies the URL where the SignalR hub is hosted. In this case, it's assumed to be located at "/hubs/userCount".
+    * signalR.HttpTransportType.WebSockets: This parameter specifies the transport type to be used for the connection. In this case, it's configured to use WebSockets as the transport type.
+        * WebSockets is a communication protocol that provides full-duplex communication channels over a single TCP connection. It's commonly used for real-time web applications due to its low latency and efficient data exchange.
+        * .build(): This method finalizes the configuration and builds the hub connection object.
+3. Handling notifications from the server:
 A callback function on is defined to handle the "updateTotalView" event sent by the server. When the server sends this notification, the associated value is updated inside an HTML element with id "totalViewsCounter".
-3. Sending notifications to the server:
+4. Sending notifications to the server:
 A function newWindowLoadedOnClient is defined to send a notification to the server called "NewWindowLoaded" via the connectionUserCount connection. This function seems to be called when a new window is loaded in the client.
-4. Handling connection state:
+5. Handling connection state:
 A function fulfilled is defined which is called when the connection to the SignalR hub is successfully established. Similarly, a function rejected is defined which should handle any connection errors. However, the rejected function appears to be empty, so it does nothing.
-5. Starting the connection:
+6. Starting the connection:
 The connection to the SignalR hub is started using the start() method. .then() is used to handle the result of starting the connection, so that if the connection succeeds, the fulfilled function is called, otherwise the rejected function is called.
 
 ## Update number of user
@@ -380,6 +387,28 @@ The .GetAwaiter().GetResult() method is used to perform an asynchronous operatio
 In the context of your OnConnectedAsync() and OnDisconnectedAsync() methods, these two methods are used after invoking SendAsync() to wait for the message to be sent to connected clients before proceeding with the rest of the code.
 However, using .GetAwaiter().GetResult() in an asynchronous environment can pose risks of thread blocking and potential performance issues, especially in high-concurrency scenarios. It's generally preferable to use the complete asynchronous pattern and avoid blocking the main thread. Instead of .GetAwaiter().GetResult(), you might consider using await in an asynchronous context.
 
+# Invoke vs Send
+
+Invoke:
+Invoke is a more generic method that allows the client to call methods defined on the server.
+It can be used to invoke any method defined on the SignalR server side, including methods defined in SignalR hubs.
+When a client invokes a method on the server using Invoke, the server executes the specified method and can send a response to the client if necessary.
+With invoke we want in general a result from server.
+
+Send:
+Send is specifically designed to send broadcast messages or specific messages to all connected clients or specific groups of clients.
+It is used to send messages to all connected clients or a specific group of clients without the need to define methods on the server for each type of message.
+It is commonly used to send general updates or notifications to all connected clients, such as in the case of status updates, chat notifications, or alerts.
+
+For example, the difference between `connectionUserCount.send("NewWindowLoaded");` and `    connectionUserCount.invoke("NewWindowLoaded", "Bhrugen").then((value) => console.log(value))`.
+
+`connectionUserCount.send("NewWindowLoaded");`
+With this statement, you are sending a message "NewWindowLoaded" to the server without expecting a specific response. This is useful for sending notifications or updates to clients without requiring a response from the server.
+
+`connectionUserCount.invoke("NewWindowLoaded", "Bhrugen").then((value) => console.log(value))`
+With this statement, you are invoking the method "NewWindowLoaded" on the server and passing "Bhrugen" as a parameter. Additionally, you are waiting for a response from the server using .then((value) => console.log(value)). This means that once the server has processed the method and returned a result, the callback function will be called with the value returned by the server. This is useful when you need to get a specific response from the server after invoking a method.
+
+
 # Repository
 * https://github.com/dotnet/AspNetCore/tree/main/src/SignalR
 * https://github.com/bhrugen/SignalRSample
@@ -391,11 +420,13 @@ However, using .GetAwaiter().GetResult() in an asynchronous environment can pose
 # Site
 * https://dotnet.microsoft.com/en-us/apps/aspnet/signalr
 * https://learn.microsoft.com/en-us/azure/azure-signalr/
+* https://medium.com/@basuraratnayake/c-tutorial-signalr-b7a7b76901be
 
 # Exercises
 * https://www.sitepoint.com/build-real-time-signalr-dashboard-angularjs/
 * https://www.telerik.com/blogs/real-time-winui-dashboard-with-signalr-backend
 * https://medium.com/@ajith.ramawickrama/develop-a-real-time-dashboard-using-azure-cosmosdb-azure-functions-azure-signalr-services-and-ac670de580f4
+* https://blog.saverioriotto.it/blog/296/tutorial/creare-una-web-app-in-tempo-reale-con-blazor-e-signalr
 
 # Payment Courses
 * https://www.udemy.com/course/signalr-mastery/?couponCode=LETSLEARNNOW
