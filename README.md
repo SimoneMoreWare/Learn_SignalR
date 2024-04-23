@@ -17,6 +17,10 @@ SignalR Tutorial
     * [RoadMap](#RoadMap)
 * [SignalR Typical Flow](#SignalR-Typical-Flow)
 * [Best practices](#Best-practices)
+* [Sample](#Sample)
+    * [Step 1: Create SignalR Hub](#Step-1:-Create-SignalR-Hub)
+    * [Step 2 and 6: Add methods to hub and SignalR Hub invokes method in client JS to notify clients](#Step-2-and-6:-Add-methods-to-hub-and-SignalR-Hub-invokes-method-in-client-JS-to-notify-clients)
+    * [Step 3: add client side signalR](#Step-3:-add-client-side-signalR)
 * [Repository](#Repository)
 * [Site](#Site)
 * [Exercises](#Exercises)
@@ -170,7 +174,7 @@ https://learn.microsoft.com/it-it/aspnet/signalr/overview/getting-started/real-t
 3. add client side signalR
 4. connect to signalR hub from client js
 5. Call signalR hub method
-6. SignalR Hub invokes method in clinet JS to notify clients
+6. SignalR Hub invokes method in client JS to notify clients
 7. Client receives update from SignalR hub and performs action
 
 # Best practices
@@ -205,9 +209,180 @@ start();
     *  Implement logging to monitor connection density, message throughput, and error rates. ASP.NET Core’s built-in logging providers can be configured in Startup.cs.
 *  Scale-Out:
     *  For applications needing to support thousands of concurrent connections, consider using Azure SignalR Service or similar scale-out mechanisms. To use Azure SignalR Service, add the service connection string to your appsettings.json and modify the Startup.cs to include: services.AddSignalR().AddAzureSignalR(connectionString);
+ 
+# Sample
+
+## Step 1: Create SignalR Hub
+
+Create a new ASP.NET core MVC .net 8 project in Visual Studio 2022. You should configure the project with "individual account" in "authentication type". 
+
+Add this sample to a GitHub repository. 
+
+Now, we will create the hub. Add the new folder in the project called "Hubs". In this folder you should create a new class file called "UserHub.cs". You remember that you include "using Microsoft.AspNetCore.SignalR;"+
+
+At the moment, you add signalR service in the program.cs file `builder.Services.AddSignalR();`. However, you map an endpoint for a SignalR hub `app.MapHub<UserHub>("/hubs/user");`
+
+Here's a breakdown of each part:
+* app: Refers to the IApplicationBuilder object, which is used to configure the ASP.NET Core application during the startup phase.
+* MapHub<UserHub>("/hubs/user"): This MapHub method is configuring the path ("/hubs/user") for your SignalR hub. The type UserHub specified within the angle brackets is the type of your hub, which should extend Hub provided by SignalR.
+* When a client connects to "/hubs/user", SignalR will automatically handle the communication between the client and the server using the UserHub hub. This is useful for achieving bidirectional real-time communication between the client and the server, such as implementing real-time chat or real-time updates of information displayed in the application.
+
+
+## Step 2 and 6: Add methods to hub and SignalR Hub invokes method in client JS to notify clients
+
+```
+using Microsoft.AspNetCore.SignalR;
+
+namespace SignlalRSample.Hubs
+{
+	public class UserHub : Hub
+	{
+		public static int TotalViews { get; set; } = 0;
+
+		public async Task NewWindowLoaded()
+		{
+			TotalViews++;
+			//send update to all clients that total views have been updated
+			await Clients.All.SendAsync("updateTotalViews", TotalViews);
+		}
+}
+
+```
+
+The responsibility of UserHub is to count the number of views on a web page.
+
+`using Microsoft.AspNetCore.SignalR;`
+This line imports the Microsoft.AspNetCore.SignalR namespace, which contains classes and tools necessary for using SignalR within an ASP.NET Core application.
+
+UserHub Class Definition
+`public class UserHub : Hub`
+The UserHub class is a class that extends Hub. This serves as the focal point for managing client connections and sending messages to clients.
+
+Static Property TotalViews
+`public static int TotalViews { get; set; } = 0;`
+This is a static property that tracks the total number of views. It is shared among all instances of the UserHub class.
+
+```
+Method NewWindowLoaded()
+public async Task NewWindowLoaded()
+{
+    TotalViews++;
+    //send update to all clients that total views have been updated
+    await Clients.All.SendAsync("updateTotalViews", TotalViews);
+}
+```
+This method is called when a new window is loaded (presumably on the client side). It increments the count of total views and then sends an update to all connected clients using the SendAsync method. The name of the method to be called on the client is "updateTotalViews", and the new value of TotalViews is passed as an argument.
+
+## Other steps
+
+Now, you should add a client-side library. At the moment, you should choose unpkg provider and @microsoft/signalr@latest library. Now, there is signalr.js in the wwwroot folder. You move the signalr.js file in the JS folder.
+
+```
+//create connection
+var connectionUserCount = new signalR.HubConnectionBuilder().withUrl("/hubs/userCount").build();
+
+//connect to methods that hub invokes aka receive notfications from hub
+connectionUserCount.on("updateTotalViews", (value) => {
+    var newCountSpan = document.getElementById("totalViewsCounter");
+    newCountSpan.innerText = value.toString();
+});
+
+connectionUserCount.on("updateTotalUsers", (value) => {
+    var newCountSpan = document.getElementById("totalUsersCounter");
+    newCountSpan.innerText = value.toString();
+});
+
+//invoke hub methods aka send notification to hub
+function newWindowLoadedOnClient() {
+    connectionUserCount.send("NewWindowLoaded");
+}
+
+//start connection
+function fulfilled() {
+    //do something on start
+    console.log("Connection to User Hub Successful");
+    newWindowLoadedOnClient();
+}
+function rejected() {
+    //rejected logs
+}
+
+connectionUserCount.start().then(fulfilled, rejected);
+```
+This JavaScript file, usersCount.js, handles the connection to the SignalR service within an ASP.NET Core MVC project. SignalR is a framework for building real-time web applications that enables bidirectional communication between client and server.
+
+Here's what happens step by step within this file:
+
+1. Creation of SignalR hub connection:
+An object connectionUserCount is created using HubConnectionBuilder provided by SignalR. This object is configured with the URL of the SignalR hub ("/hubs/userCount").
+2. Handling notifications from the server:
+A callback function on is defined to handle the "updateTotalView" event sent by the server. When the server sends this notification, the associated value is updated inside an HTML element with id "totalViewsCounter".
+3. Sending notifications to the server:
+A function newWindowLoadedOnClient is defined to send a notification to the server called "NewWindowLoaded" via the connectionUserCount connection. This function seems to be called when a new window is loaded in the client.
+4. Handling connection state:
+A function fulfilled is defined which is called when the connection to the SignalR hub is successfully established. Similarly, a function rejected is defined which should handle any connection errors. However, the rejected function appears to be empty, so it does nothing.
+5. Starting the connection:
+The connection to the SignalR hub is started using the start() method. .then() is used to handle the result of starting the connection, so that if the connection succeeds, the fulfilled function is called, otherwise the rejected function is called.
+
+## Update number of user
+
+```
+using Microsoft.AspNetCore.SignalR;
+
+namespace SignlalRSample.Hubs
+{
+	public class UserHub : Hub
+	{
+		public static int TotalViews { get; set; } = 0;
+		public static int TotalUsers { get; set; } = 0;
+
+		public async Task NewWindowLoaded()
+		{
+			TotalViews++;
+			//send update to all clients that total views have been updated
+			await Clients.All.SendAsync("updateTotalViews", TotalViews);
+		}
+
+		public override Task OnConnectedAsync()
+		{
+			TotalUsers++;
+			Clients.All.SendAsync("updateTotalUsers", TotalViews).GetAwaiter().GetResult();
+			return base.OnConnectedAsync();
+		}
+
+		public override Task OnDisconnectedAsync(Exception? exception)
+		{
+			TotalUsers--;
+			Clients.All.SendAsync("updateTotalUsers", TotalViews).GetAwaiter().GetResult();
+			return base.OnDisconnectedAsync(exception);
+		}
+
+
+	}
+}
+```
+Explanation of the Methods:
+
+OnConnectedAsync()
+This method is automatically called when a client connects to the server via SignalR.
+It increments the TotalUsers counter, presumably tracking the total number of connected users.
+Then, it sends a message to all connected clients using Clients.All.SendAsync("updateTotalUsers", TotalUsers). This method asynchronously sends a message to all connected clients, which will call the JavaScript function updateTotalUsers on the client side with TotalUsers as an argument.
+Finally, it returns the execution to the base method base.OnConnectedAsync().
+
+OnDisconnectedAsync(Exception? exception)
+This method is automatically called when a client disconnects from the SignalR server.
+It decrements the TotalUsers counter.
+Then, it sends a message to all connected clients to update the user count, using Clients.All.SendAsync("updateTotalUsers", TotalUsers).
+Finally, it returns the execution to the base method base.OnDisconnectedAsync(exception).
+
+About .GetAwaiter().GetResult():
+The .GetAwaiter().GetResult() method is used to perform an asynchronous operation synchronously. In practice, when using .GetAwaiter().GetResult(), you are blocking the current thread until the asynchronous operation completes, either getting the result or handling any exceptions.
+In the context of your OnConnectedAsync() and OnDisconnectedAsync() methods, these two methods are used after invoking SendAsync() to wait for the message to be sent to connected clients before proceeding with the rest of the code.
+However, using .GetAwaiter().GetResult() in an asynchronous environment can pose risks of thread blocking and potential performance issues, especially in high-concurrency scenarios. It's generally preferable to use the complete asynchronous pattern and avoid blocking the main thread. Instead of .GetAwaiter().GetResult(), you might consider using await in an asynchronous context.
 
 # Repository
 * https://github.com/dotnet/AspNetCore/tree/main/src/SignalR
+* https://github.com/bhrugen/SignalRSample
 
 # Site
 * https://dotnet.microsoft.com/en-us/apps/aspnet/signalr
