@@ -15,6 +15,7 @@ SignalR Tutorial
     * [Hubs](#Hubs)
     * [Browsers that don't support ECMAScript 6 (ES6)](#Browsers-that-don't-support-ECMAScript-6-(ES6))
     * [RoadMap](#RoadMap)
+* [SignalR Typical Flow](#SignalR-Typical-Flow)
 * [Best practices](#Best-practices)
 * [Repository](#Repository)
 * [Site](#Site)
@@ -145,6 +146,8 @@ public class ChatHub : Hub
 }
 ```
 
+![imgHub](https://github.com/SimoneMoreWare/Learn_SignalR/blob/main/img/hub.png)
+
 ## Browsers that don't support ECMAScript 6 (ES6)
 
 SignalR targets ES6. For browsers that don't support ES6, transpile the library to ES5. For more information, see [Getting Started with ES6 – Transpiling ES6 to ES5 with Traceur and Babel](https://weblogs.asp.net/dwahlin/getting-started-with-es6-%E2%80%93-transpiling-es6-to-es5).
@@ -159,6 +162,16 @@ SignalR targets ES6. For browsers that don't support ES6, transpile the library 
 
 ## RoadMap
 https://learn.microsoft.com/it-it/aspnet/signalr/overview/getting-started/real-time-web-applications-with-signalr
+
+# SignalR Typical Flow
+
+1. Create SignalR Hub
+2. Add methods to hub
+3. add client side signalR
+4. connect to signalR hub from client js
+5. Call signalR hub method
+6. SignalR Hub invokes method in clinet JS to notify clients
+7. Client receives update from SignalR hub and performs action
 
 # Best practices
 
