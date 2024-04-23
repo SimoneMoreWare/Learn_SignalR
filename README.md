@@ -12,6 +12,7 @@ SignalR Tutorial
 * [Overview of ASP.NET Core SignalR](#Overview-of-ASP.NET-Core-SignalR)
     * [What is SignalR?](#What-is-SignalR?)
     * [Use Cases Of SignalR](#Use-Cases-Of-SignalR)
+    * [When Not to Use SignalR](#When-Not-to-Use-SignalR)
     * [Web Monitoring Application](#WebMonitoringApplication)
     * [Transports](#Transports)
     * [Hubs](#Hubs)
@@ -83,6 +84,13 @@ This synchronization is crucial for competitive and cooperative gaming where lat
 SignalR supports the development of applications where several users can edit documents or projects at the same time.
 SignalR facilitates collaborative work by making changes made by one user visible to all other users working on the document at the same time.
 This is especially crucial in academic, creative, and professional settings where teamwork and collaboration is crucial to productivity.
+
+## When Not to Use SignalR
+
+SignalR is only as durable as the underlying connection. If the connectivity of a client application is not reliable, SignalR may not be the optimal choice.
+
+Another consideration is the scalability of SignalR. Depending on the number of concurrently connected clients, a resource conflict may occur on the web server when respective limits are reached. In situations like this, it may be necessary to deploy the application to a server farm and use a backplane. Implementing this approach independently can be complex.
+
 
 ## Web Monitoring Application
 
