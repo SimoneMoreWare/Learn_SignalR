@@ -384,6 +384,10 @@ However, using .GetAwaiter().GetResult() in an asynchronous environment can pose
 * https://github.com/dotnet/AspNetCore/tree/main/src/SignalR
 * https://github.com/bhrugen/SignalRSample
 
+# PDFs
+* [SignalR Basic Flow](https://github.com/SimoneMoreWare/Learn_SignalR/blob/main/pdf/SignalR%20Basic%20Flow.pdf)
+* [SignalR Slides](https://github.com/SimoneMoreWare/Learn_SignalR/blob/main/pdf/SignalR.pdf)
+
 # Site
 * https://dotnet.microsoft.com/en-us/apps/aspnet/signalr
 * https://learn.microsoft.com/en-us/azure/azure-signalr/
