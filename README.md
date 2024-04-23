@@ -91,8 +91,21 @@ Microsoft released an open-source library called SignalR for ASP.NET in 2013, wh
 SignalR supports the following techniques for handling real-time communication (in order of graceful fallback):
 
 * [WebSockets](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/websockets?view=aspnetcore-8.0)
+    - WebSocket is a bidirectional full-duplex communication protocol that allows interactive communication between clients and servers.
+    - With SignalR, WebSocket is the preferred transport method when available, as it offers optimal performance and reduced latency.
+    - WebSocket establishes a persistent connection between the client and the server, allowing data to be sent both from the client to the server and from the server to the client without waiting for an explicit request.
+- This protocol is supported by many modern browsers and web servers.
 * Server-Sent Events
+    - SSE is a mechanism that allows the server to send events to the browser asynchronously over a single HTTP connection.
+    - Unlike WebSocket, SSE only allows the server to send data to the client; the client cannot send data to the server using SSE.
+    - SignalR supports SSE as one of the alternative transport protocols when WebSocket is not available.
+    - SSE is supported by many modern browsers, but it may not be available on all servers.
 * Long Polling
+    - Long Polling is a technique that simulates bidirectional connection by emulating a persistent connection between client and server through a series of HTTP requests.
+    - When the client makes a request to the server, the server does not respond immediately. Instead, it keeps the connection open until it has data to send to the client or until a timeout expires.
+    - When the server has data to send, it responds to the client's request with the data, and the client immediately sends a new request to keep the connection open.
+    - Long Polling is a less efficient technique compared to WebSocket and SSE, as it requires more bandwidth and increases latency.
+    - However, Long Polling can be used as a fallback when WebSocket and SSE are not available.
 
 SignalR automatically chooses the best transport method that is within the capabilities of the server and client.
 
@@ -103,6 +116,34 @@ SignalR uses hubs to communicate between clients and servers.
 A hub is a high-level pipeline that allows a client and server to call methods on each other. SignalR handles the dispatching across machine boundaries automatically, allowing clients to call methods on the server and vice versa. You can pass strongly-typed parameters to methods, which enables model binding. SignalR provides two built-in hub protocols: a text protocol based on JSON and a binary protocol based on [MessagePack](https://msgpack.org/). MessagePack generally creates smaller messages compared to JSON. Older browsers must support [XHR level 2](https://caniuse.com/#feat=xhr2) to provide MessagePack protocol support.
 
 Hubs call client-side code by sending messages that contain the name and parameters of the client-side method. Objects sent as method parameters are deserialized using the configured protocol. The client tries to match the name to a method in the client-side code. When the client finds a match, it calls the method and passes to it the deserialized parameter data.
+
+In SignalR, a hub is a component that serves as a central point of contact for real-time communication between clients and servers. A hub is a fundamental concept in SignalR and is implemented as a server-side class that exposes methods that can be called by clients and can in turn send messages to clients.
+
+Key Features of a Hub:
+
+1. **Exposed Methods**: A hub defines a set of methods that can be invoked by clients to interact with the server. These methods can accept parameters and may return values or asynchronous tasks.
+
+2. **Bidirectional Communication**: Hubs enable bidirectional communication between clients and servers. This means that clients can call methods exposed by the hub on the server, and at the same time, the server can send messages to clients through the hub.
+
+3. **Automatic Connection Management**: SignalR automatically manages connection handling for hubs. This means that when a client connects or disconnects, SignalR handles the connection lifecycle automatically and manages connections transparently for the application.
+
+4. **Transport Protocol Abstraction**: Hubs provide an abstraction over the various transport protocols supported by SignalR (such as WebSocket, SSE, and Long Polling), allowing developers to write server-side code without having to worry about the details of the underlying transport protocol.
+
+### Example Hub Definition:
+
+```csharp
+using Microsoft.AspNetCore.SignalR;
+using System.Threading.Tasks;
+
+public class ChatHub : Hub
+{
+    public async Task SendMessage(string user, string message)
+    {
+        // Send the message to all clients
+        await Clients.All.SendAsync("ReceiveMessage", user, message);
+    }
+}
+```
 
 ## Browsers that don't support ECMAScript 6 (ES6)
 
